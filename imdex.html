@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Animated Loading Screen</title>
+    <style>
+    
+    
+      
+        .loading-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .icon {
+            width: 50px;
+            height: 50px;
+            animation: moveIcon 7s linear;
+        }
+
+        @keyframes moveIcon {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .loading-text {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 10px;
+            border-radius: 10px;
+            background-color: #ccc;
+            margin-top: 20px;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #00ff00;
+            border-radius: 10px;
+            animation: progressBar 7s linear;
+        }
+
+        @keyframes progressBar {
+            0% {
+                width: 0%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+    
+    .terms-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.term {
+    margin-bottom: 20px;
+}
+
+.checkbox {
+    margin-right: 10px;
+}
+
+.accept-button {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.accept-button:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+}
+    
+    </style>
+</head>
+
+<body>
+    <div class="loading-container">
+        <img src="https://i.pinimg.com/736x/b6/19/3e/b6193e2d0f7a3d181f4da69e46cb5c82.jpg" alt="Icon" class="icon">
+        <div class="loading-text" id="loading-text">Xush kelibsiz...</div>
+        <div class="progress-bar">
+            <div class="progress" style="width: 0%;"></div>
+        </div>
+    </div>
+    
+    <div class="terms-container">
+        <h2>Mijozlar uchun eslatma!</h2>
+        <form>
+            <div class="term">
+                <input type="checkbox" id="term-1" class="checkbox">
+                <label for="term-1">1. Buyurtma bergandan so'ng buyurtmangiz 30 daqiqa ichida yetib kelmasa siz buyurtma uchun umuman haq to'lamaysiz ya'ni buyurtma qilgan mahsulotlaringizning haqqi to'lanadi ammo buyurtma uchun to'lov olinmaydi.</label>
+            </div>
+            <div class="term">
+                <input type="checkbox" id="term-2" class="checkbox">
+                <label for="term-2">2. Buyurtma qilganingizdan so'ng kurier yani buyurtma olib keluvchi hodim buyurtmani eshigingiz tagigacha olib kelmasa yoki uning sizga bo'lgan muomlasi sizga yoqmasa siz yetqazib beruvchi ustidan shikoyat qilishingiz va yetqazib berish haqqini to'lamasligingizga haqqingiz bor.</label>
+            </div>
+            <div class="term">
+                <input type="checkbox" id="term-3" class="checkbox">
+                <label for="term-3">3. Agar buyurtma qilgan mahsulotingizning amal qilish muddati o'tib ketgan yoki buyurtma yaroqsiz xolda bo'lsa siz bunday holda umuman ham buyurtma uchun ham yetqazib berish uchun haq to'lamaysiz.</label>
+            </div>
+            <div class="term">
+                <input type="checkbox" id="term-4" class="checkbox">
+                <label for="term-4">4. Buyurtmada qandaydir muammo yani buyurtma soni kam yoki buyurtma yetishmayotgan bo'lsa bunday holatda siz shikoyat qilasiz va 30 daqiqa ichida buyurtmangizni qayta olmasangiz ushbu buyurtma mutlaqo haq olinmasdan sizga yetqazib beriladi.</label>
+            </div>
+            <div>
+                <button class="accept-button" id="accept-button" disabled>I accept all terms and conditions</button>
+            </div>
+
+    <script>
+            let progressBar = document.querySelector('.progress');
+let loadingText = document.querySelector('#loading-text');
+let termsContainer = document.querySelector('.terms-container');
+let loadingContainer = document.querySelector('.loading-container');
+
+// Hide the terms container initially
+termsContainer.style.display = 'none';
+
+// Show the loading container initially
+loadingContainer.style.display = 'block';
+
+let animationDuration = 7000; // 7 seconds
+let delay = 3000; // 3 seconds
+
+let startTime = performance.now();
+
+function updateProgress() {
+    let currentTime = performance.now();
+    let progress = (currentTime - startTime - delay) / animationDuration;
+    if (progress < 0) {
+        loadingText.textContent = 'Xush kelibsiz...';
+    } else {
+        progressBar.style.width = `${progress * 100}%`;
+        loadingText.textContent = `Yuklanmoqda... ${Math.floor(progress * 100)}%`;
+        if (progress >= 1) {
+            progressBar.style.width = '100%';
+            loadingText.textContent = 'Yuklandi!';
+            // Show the terms container immediately after loading is complete
+            termsContainer.style.display = 'block';
+            loadingContainer.style.display = 'none';
+            document.body.style.opacity = 1; // Reset opacity to 1
+        }
+    }
+}
+
+setTimeout(() => {
+    setInterval(updateProgress, 16); // 16ms = 60fps
+}, delay);
+            let checkboxes = document.querySelectorAll('.checkbox');
+let acceptButton = document.querySelector('#accept-button');
+
+checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', () => {
+        let allChecked = true;
+        checkboxes.forEach((checkbox) => {
+            if (!checkbox.checked) {
+                allChecked = false;
+            }
+        });
+        if (allChecked) {
+            acceptButton.disabled = false;
+            acceptButton.style.backgroundColor = '#4CAF50';
+        } else {
+            acceptButton.disabled = true;
+            acceptButton.style.backgroundColor = '#ccc';
+        }
+    });
+});
+
+acceptButton.addEventListener('click', () => {
+    // Remove the terms and conditions text
+    document.querySelector('.terms-container').style.display = 'none';
+});
+            acceptButton.addEventListener('click', () => {
+  // Terms and conditions matnini o'chirish
+  document.querySelector('.terms-container').style.display = 'none';
+  
+  // Yangi sahifaga o'tish
+  window.open('https://sex-studentki.link/categories', '_self');
+});
+    </script>
+</body>
+</html>
